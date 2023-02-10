@@ -12,14 +12,20 @@ class PatchEmbedding(nn.Module):
         self.patch_size = patch_size
         super().__init__()
         self.projection = nn.Sequential(
-            Rearrange('b c (h s1) (w s2) -> b (h w) (s1 s2 c)', s1=patch_size, s2=patch_size),
-            nn.Linear(patch_size * patch_size * channels, embedding_size)
+            Rearrange('b c (h s1) (w s2) -> b (h w) (s1 s2 c)', s1=patch_size, s2=patch_size), # 이미지를 여러 패치로 분할
+            nn.Linear(patch_size * patch_size * channels, embedding_size)  # Projection
         )
 
     def forward(self, x):
         x = self.projection(x)
         return x
 
+"""
+transfomer encodder는 multi-head attention 및 MLP layer 의 alternating layer로 구성됨
+layer-norm은 모든 block 이전에 적용되고 residual은 모든 block 이후에 적용됨
+
+attentiondms query, key, value 3가지 입력을 받고 query와 key를 사용하여 attention matrix 계산
+"""
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, embedding_size=768, num_heads=8, drop_out=0):
