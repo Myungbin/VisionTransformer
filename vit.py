@@ -114,7 +114,7 @@ class ViT(nn.Sequential):
                  patch_size: int = 16,
                  emb_size: int = 768,
                  depth: int = 12,
-                 n_classes: int = 1000,
+                 n_classes: int = 2,
                  **kwargs):
         super().__init__(
             PatchEmbedding(in_channels, patch_size, emb_size),
@@ -123,4 +123,4 @@ class ViT(nn.Sequential):
         )
 
 
-summary(ViT(), (3, 224, 224), device='cpu')
+summary(ViT(), (3, 256, 256), device='cpu')
